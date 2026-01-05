@@ -1,3 +1,4 @@
+
 # ESTRUCTURA DE PAQUETES
 
 src/
@@ -17,3 +18,4 @@ src/
 ├── pages/              # Ensamblado de rutas (Home.tsx, GamePage.tsx)
 ├── store/              # Context Providers (AuthContext, GameContext)
 └── router/             # Configuración de React Router
+
