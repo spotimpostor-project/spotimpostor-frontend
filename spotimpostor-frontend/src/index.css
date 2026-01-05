@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  /* Definición de colores neón y arcade */
+  --color-deep-blue: #0a0e1a;
+  --color-emerald-green: #10b981;
+  --color-soft-neon-green: #34d399;
+  
+  /* Definición de la fuente personalizada */
+  --font-body: "Geist", sans-serif;
+  --font-display: "Retro Gaming", sans-serif;
+
+  /* Definición del patrón de fondo (Grid) */
+  --background-image-grid-pattern: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+  --background-size-grid-size: 30px 30px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  /* Use kebab-case for theme keys in v4 */
+  background-color: black; /* Simplified to pure black */
+  font-family: theme('font.body');
+  color: theme('colors.gray.200');
+}
+
+@keyframes pulse-neon {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(50vw, -40vh) scale(1.2);
+  }
+  50% {
+    transform: translate(-30vw, 30vh) scale(0.8);
+  }
+  75% {
+    transform: translate(20vw, -10vh) scale(1.1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 15s infinite alternate cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+.animation-delay-6000 {
+  animation-delay: 6s;
+}
+.animation-delay-8000 {
+  animation-delay: 8s;
+}
+
+/* Custom utility for text neon shadow */
+.text-shadow-neon {
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14;
+}
