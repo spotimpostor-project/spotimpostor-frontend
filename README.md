@@ -1,6 +1,7 @@
 
 # ESTRUCTURA DE PAQUETES
 
+```text
 src/
 ├── assets/             # Imágenes, SVGs, fuentes
 ├── configs/            # Constantes de entorno, variables globales
@@ -18,4 +19,4 @@ src/
 ├── pages/              # Ensamblado de rutas (Home.tsx, GamePage.tsx)
 ├── store/              # Context Providers (AuthContext, GameContext)
 └── router/             # Configuración de React Router
-
+```
