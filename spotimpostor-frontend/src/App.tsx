@@ -1,7 +1,7 @@
-import './App.css'
+
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import HomePage from './modules/home/pages/HomePage';
-import DynamicBackground from './shared/components/DynamicBackground';
+
 import HomeHeader from './modules/home/components/HomeHeader'; // Import HomeHeader
 import GameModeSelection from './modules/game/pages/GameModeSelection'; // Import GameModeSelection
 import CollectionSelection from './modules/game/pages/CollectionSelection'; // Import CollectionSelection
@@ -18,7 +18,7 @@ function AppContent() {
 
   return (
     <div className="relative w-full max-w-full min-h-screen overflow-x-hidden bg-black">
-      <DynamicBackground /> {/* Render the dynamic background */}
+
       <div className="relative z-10">
         {showHomeHeader && <HomeHeader />} {/* Conditionally render HomeHeader */}
         <Routes>

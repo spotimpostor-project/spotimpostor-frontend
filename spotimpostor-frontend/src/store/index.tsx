@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, useContext, ReactNode } from 'react';
-import { GameState, GameAction, gameReducer, initialGameState } from './gameReducer';
+import { GameAction, gameReducer, initialGameState } from './gameReducer';
+import { GameState } from '../types/game';
 
 // Create the context
 interface GameContextType {

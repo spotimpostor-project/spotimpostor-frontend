@@ -1,6 +1,8 @@
 import { GameMode, Collection, Player, GamePhase, GameState, GameResult } from '../types/game';
 
 export const initialGameState: GameState = {
+  gameId: null,
+  hostId: null,
   modes: [],
   collections: [],
   selectedMode: null,
