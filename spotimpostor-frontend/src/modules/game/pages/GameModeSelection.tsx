@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+//import axios from 'axios';
+import api from '../../../configs/api';
 import { Button } from '../../../shared/components/Button';
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
@@ -30,7 +31,7 @@ const GameModeSelection: React.FC = () => {
   useEffect(() => {
     const fetchGameModes = async () => {
       try {
-        const response = await axios.get<ApiResponse>('/api/modos_partida');
+        const response = await api.get<ApiResponse>('/modos_partida');//axios.get<ApiResponse>('/api/modos_partida');
         setGameModes(response.data.data);
       } catch (err) {
         console.error('Error fetching game modes:', err);
