@@ -20,6 +20,8 @@ export interface GameMode {
   export type GamePhase = 'SETUP_MODE' | 'SETUP_COLL' | 'SETUP_PLAYERS' | 'LOBBY' | 'INGAME' | 'RESULTS';
   
   export interface GameState {
+    gameId: string | null;
+    hostId: string | null;
     modes: GameMode[];
     collections: Collection[];
     selectedMode: GameMode | null;

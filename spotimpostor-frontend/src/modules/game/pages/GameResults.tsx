@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useGame } from '../../../store';
 import { useNavigate } from 'react-router-dom';
-import { Player, GamePlayerData } from '../../../types/game';
+import { GamePlayerData } from '../../../types/game';
 import { Button } from '../../../shared/components/Button';
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
