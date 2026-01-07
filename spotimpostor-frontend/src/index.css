@@ -79,3 +79,31 @@ body {
 .text-shadow-neon {
   text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14;
 }
+
+/* Custom utility for neon drop shadow */
+.drop-shadow-neon {
+  filter: drop-shadow(0 0 3px theme('colors.emerald.400')) drop-shadow(0 0 8px theme('colors.emerald.500'));
+}
+
+/* Custom utility for subtle neon box shadow on elements */
+.shadow-neon-sm {
+  box-shadow: 0 0 5px theme('colors.emerald.400'), 0 0 10px theme('colors.emerald.600');
+}
+
+/* Custom neon effect for input fields */
+.input-neon-effect {
+  box-shadow: 0 0 3px theme('colors.emerald.500');
+}
+
+.input-neon-effect:focus {
+  box-shadow: 0 0 7px theme('colors.emerald.400'), 0 0 15px theme('colors.emerald.600');
+}
+
+/* Custom neon effect for radio buttons */
+.radio-neon-effect:checked {
+  filter: drop-shadow(0 0 3px theme('colors.emerald.400'));
+}
+.radio-neon-effect:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.5); /* A ring for focus */
+}
