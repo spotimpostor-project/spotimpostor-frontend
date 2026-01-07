@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios
+//import axios from 'axios'; // Import axios
+import api from '../../../configs/api';
 import { GameContext } from '../../../store'; // Import GameContext directly
 import { Button } from '../../../shared/components/Button';
 import { Player } from '../../../types/game';
@@ -94,7 +95,7 @@ const PlayerSetup: React.FC = () => {
       };
 
       try {
-        const response = await axios.post('/api/partidas', gamePayload);
+        const response = await api.post('/partidas', gamePayload);//axios.post('/api/partidas', gamePayload);
 
         if (response.status === 200) {
           // Extract players with roles and words from the API response

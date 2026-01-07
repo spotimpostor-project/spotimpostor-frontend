@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+//import axios from 'axios';
+import api from '../../../configs/api';
 import { Button } from '../../../shared/components/Button';
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
@@ -33,7 +34,7 @@ const CollectionSelection: React.FC = () => {
         setLoading(true);
         setError(null);
         try {
-          const response = await axios.get<CollectionApiResponse>('/api/colecciones/general');
+          const response = await api.get<CollectionApiResponse>('/colecciones/general');//axios.get<CollectionApiResponse>('/api/colecciones/general');
           setGeneralCollections(response.data.data);
         } catch (err) {
           console.error('Error fetching general collections:', err);
