@@ -28,4 +28,30 @@ export interface GameMode {
     impostorCount: number;
     currentPhase: GamePhase;
     loading: boolean;
+    // New fields for game creation
+    modo: string;
+    nombreColeccion: string;
+    tipoColeccion: 'GENERAL' | 'PUBLICA' | 'COMPARTIDA' | 'PRIVADA';
+    codigoColeccion: string | null;
+    cantidadJugadores: number;
+    cantidadImpostores: number;
+    correo: string | null;
+    jugadores: string[];
+    gameResult: GameResult | null; // Store the backend response here
+    gameTime: number;
+  }
+
+  export interface GamePlayerData {
+    jugador: string;
+    rol: 'CIVIL' | 'IMPOSTOR';
+    palabra: string;
+  }
+
+  export interface LobbyPlayer extends GamePlayerData {
+    id: string;
+    isReady: boolean;
+  }
+  
+  export interface GameResult {
+    data: GamePlayerData[];
   }

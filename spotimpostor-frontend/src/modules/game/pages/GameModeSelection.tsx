@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import DynamicBackground from '../../../shared/components/DynamicBackground';
 import { Button } from '../../../shared/components/Button';
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
+import { useGame } from '../../../store'; // Import useGame
 
 // Utility for combining Tailwind classes - copied from Button.tsx for consistency
 function cn(...inputs: ClassValue[]) {
@@ -25,6 +25,7 @@ const GameModeSelection: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<GameMode | null>(null);
+  const { dispatch } = useGame(); // Use the game context
 
   useEffect(() => {
     const fetchGameModes = async () => {
@@ -52,18 +53,15 @@ const GameModeSelection: React.FC = () => {
 
   const handleContinue = () => {
     if (selectedMode) {
-      // TODO: Save selectedMode to global store (src/store/)
-      // For now, it will navigate
-      console.log('Selected Mode:', selectedMode);
-      navigate('/game/setup'); // Assuming a route '/game/setup'
+      dispatch({ type: 'SET_MODE', payload: selectedMode.modo }); // Dispatch SET_MODE
+      navigate('/setup/collection'); // Navigate to collection selection
     }
   };
 
   if (loading) {
     return (
       <div className="relative min-h-screen bg-black text-white flex items-center justify-center">
-        <DynamicBackground />
-        <p className="z-10 text-xl text-emerald-400">Loading game modes...</p>
+        <p className="z-10 text-xl text-[#22c55e]">Loading game modes...</p>
       </div>
     );
   }
@@ -71,7 +69,6 @@ const GameModeSelection: React.FC = () => {
   if (error) {
     return (
       <div className="relative min-h-screen bg-black text-white flex items-center justify-center">
-        <DynamicBackground />
         <p className="z-10 text-xl text-red-500">{error}</p>
       </div>
     );
@@ -79,12 +76,10 @@ const GameModeSelection: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-black text-white p-8 flex flex-col items-center justify-center">
-      <DynamicBackground />
-
       {/* Back Button */}
       <button
         onClick={handleGoBack}
-        className="absolute top-8 left-8 z-10 text-emerald-400 hover:text-emerald-300 transition-colors"
+        className="absolute top-8 left-8 z-10 text-[#22c55e] hover:text-[#22c55e] transition-colors"
         aria-label="Go back"
       >
         <svg
@@ -115,7 +110,7 @@ const GameModeSelection: React.FC = () => {
                 key={mode.modo}
                 className={cn(
                   'bg-emerald-900/30 p-6 rounded-lg cursor-pointer transition-all duration-300',
-                  'border-2 border-transparent hover:border-emerald-500 hover:shadow-neon-emerald',
+                  'border-2 border-transparent hover:border-[#22c55e] hover:shadow-neon-emerald',
                   selectedMode?.modo === mode.modo && 'border-2 border-[#22c55e] shadow-[0_0_15px_rgba(34,197,94,0.4)]'
                 )}
                 onClick={() => handleSelectMode(mode)}

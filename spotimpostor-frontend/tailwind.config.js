@@ -7,9 +7,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        'emerald-green': '#059669',
-        'soft-neon-green': '#39FF14',
-        'deep-blue': '#0A142F',
+        'emerald-green': 'var(--color-emerald-green)',
+        'soft-neon-green': 'var(--color-soft-neon-green)',
+        'deep-blue': 'var(--color-deep-blue)',
       },
       fontFamily: {
         primary: ['"Press Start 2P"', 'cursive'],
