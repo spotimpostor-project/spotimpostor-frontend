@@ -39,7 +39,8 @@ export type GameAction =
   | { type: 'SET_PLAYER_DATA'; payload: { jugadores: string[]; cantidadJugadores: number; cantidadImpostores: number; }; }
   | { type: 'SET_GAME_RESULT'; payload: GameResult; }
   | { type: 'SET_GAME_TIME'; payload: number }
-  | { type: 'UPDATE_PLAYER_READY_STATUS'; payload: { playerId: string; isReady: boolean } };
+  | { type: 'UPDATE_PLAYER_READY_STATUS'; payload: { playerId: string; isReady: boolean } }
+  | { type: 'ELIMINATE_PLAYER'; payload: { playerId: string } };
 
 // Reducer function to manage state changes
 export const gameReducer = (state: GameState, action: GameAction): GameState => {
@@ -93,6 +94,7 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         jugadores: action.payload.jugadores,
         cantidadJugadores: action.payload.cantidadJugadores,
         cantidadImpostores: action.payload.cantidadImpostores,
+        impostorCount: action.payload.cantidadImpostores,
       };
     case 'SET_GAME_RESULT':
       return {
@@ -112,6 +114,13 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
           p.id === action.payload.playerId ? { ...p, isReady: action.payload.isReady } : p
         ),
       };
+    case 'ELIMINATE_PLAYER':
+        return {
+          ...state,
+          players: state.players.map((p: Player) =>
+            p.id === action.payload.playerId ? { ...p, isEliminated: true } : p
+          ),
+        };
     default:
       return state;
   }

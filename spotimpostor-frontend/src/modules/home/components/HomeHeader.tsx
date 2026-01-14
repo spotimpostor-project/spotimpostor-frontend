@@ -1,5 +1,6 @@
 // src/modules/home/components/HomeHeader.tsx
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 const UserIcon = () => (
   <svg
@@ -19,12 +20,16 @@ const UserIcon = () => (
 );
 
 const HomeHeader: React.FC = () => {
+  const location = useLocation();
+
   return (
     <header className="absolute top-0 right-0 p-4 md:p-6 px-6">
-      <div className="flex items-center space-x-2">
-        <UserIcon />
-        <span className="font-bold text-[#22c55e]">Login</span>
-      </div>
+      {location.pathname === '/' && (
+        <div className="flex items-center space-x-2">
+          <UserIcon />
+          <span className="font-bold text-[#22c55e]">Login</span>
+        </div>
+      )}
     </header>
   );
 };
