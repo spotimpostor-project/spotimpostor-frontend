@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import axios from 'axios'; // Import axios
 import api from '../../../configs/api';
-import { GameContext } from '../../../store'; // Import GameContext directly
+import { GameContext } from '../../../store';
 import { Button } from '../../../shared/components/Button';
 import { Player } from '../../../types/game';
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
 
-// Utility for combining Tailwind classes - copied from Button.tsx for consistency
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -16,25 +14,40 @@ function cn(...inputs: ClassValue[]) {
 const PlayerSetup: React.FC = () => {
   const navigate = useNavigate();
   const context = useContext(GameContext);
+
   if (!context) {
     throw new Error('PlayerSetup must be used within a GameProvider');
   }
-  const { state, dispatch } = context;
-  const [playerNames, setPlayerNames] = useState<string[]>(
-    state.jugadores.length > 0 ? state.jugadores : ['', '', '']
-  );
-  const [impostors, setImpostors] = useState<number>(state.cantidadImpostores || 0);
-  const [error, setError] = useState<string | null>(null); // New state for API errors
 
-  // Destructure relevant state properties for API payload construction
+  const { state, dispatch } = context;
+
+  const [playerNames, setPlayerNames] = useState<string[]>(() => 
+    state.jugadores.length >= 3 ? state.jugadores : ['', '', '']
+  );
+  const [impostorCount, setImpostorCount] = useState<number>(state.cantidadImpostores || 1);
+  const [error, setError] = useState<string | null>(null);
+
   const { modo, nombreColeccion, tipoColeccion, codigoColeccion, correo } = state;
 
+  const activePlayersCount = playerNames.filter(name => name.trim() !== '').length;
+  const minImpostors = 1;
+  const maxImpostors = Math.floor(activePlayersCount / 2);
+
   useEffect(() => {
-    // Ensure minimum 3 players are always present in the state
-    if (playerNames.length < 3) {
-      setPlayerNames(['', '', '']);
+    if (activePlayersCount < 3) {
+      setImpostorCount(1);
+      return;
     }
-  }, [playerNames]);
+    
+    const newMax = Math.floor(activePlayersCount / 2);
+    
+    if (impostorCount > newMax) {
+      setImpostorCount(newMax);
+    } else if (impostorCount < minImpostors) {
+      setImpostorCount(minImpostors);
+    }
+
+  }, [playerNames, activePlayersCount, impostorCount]);
 
   const handlePlayerNameChange = (index: number, name: string) => {
     const newPlayerNames = [...playerNames];
@@ -47,123 +60,107 @@ const PlayerSetup: React.FC = () => {
   };
 
   const removePlayerInput = (index: number) => {
-    const newPlayerNames = playerNames.filter((_, i) => i !== index);
-    setPlayerNames(newPlayerNames);
+    if (playerNames.length > 3) {
+      const newPlayerNames = playerNames.filter((_, i) => i !== index);
+      setPlayerNames(newPlayerNames);
+    }
   };
 
-  const handleImpostorChange = (value: number) => {
-    setImpostors(Math.max(0, value)); // Ensure impostors don't go below 0
+  const incrementImpostors = () => {
+    if (impostorCount < maxImpostors) {
+      setImpostorCount(prev => prev + 1);
+    }
   };
 
-  const validateGameSetup = useCallback(() => {
+  const decrementImpostors = () => {
+    if (impostorCount > minImpostors) {
+      setImpostorCount(prev => prev - 1);
+    }
+  };
+
+  const isGameSetupValid = useCallback(() => {
+    const allNamesFilled = playerNames.every(name => name.trim() !== '');
+    return activePlayersCount >= 3 && allNamesFilled;
+  }, [playerNames, activePlayersCount]);
+
+  const handleCreateGame = async () => {
+    if (!isGameSetupValid()) {
+      setError("Please ensure all player names are filled and there are at least 3 players.");
+      return;
+    }
+    setError(null);
+
     const activePlayers = playerNames.filter(name => name.trim() !== '');
-    const playerCount = activePlayers.length;
+    const cantidadJugadores = activePlayers.length;
 
-    const allNamesValid = activePlayers.length === playerNames.length && playerNames.every(name => name.trim() !== '');
-    const hasMinPlayers = playerCount >= 3;
-    const isValidImpostorCount = impostors > 0 && impostors < playerCount; // Impostors must be less than total players, not playerCount / 2
-
-    return hasMinPlayers && allNamesValid && isValidImpostorCount;
-  }, [playerNames, impostors]);
-
-  const handleCreateGame = async () => { // Make function async
-    if (validateGameSetup()) {
-      setError(null); // Clear previous errors
-
-      const activePlayers = playerNames.filter(name => name.trim() !== '');
-      const cantidadJugadores = activePlayers.length;
-
-      // Dispatch action to update players and impostor count in global state
-      dispatch({ 
-        type: 'SET_PLAYER_DATA', 
-        payload: { 
-          jugadores: activePlayers, 
-          cantidadJugadores: cantidadJugadores, 
-          cantidadImpostores: impostors 
-        } 
-      });
-
-      const gamePayload = {
-        modo: modo,
-        nombreColeccion: nombreColeccion,
-        codigoColeccion: codigoColeccion, // This could be null
-        tipoColeccion: tipoColeccion,
-        cantidadJugadores: cantidadJugadores,
-        cantidadImpostores: impostors,
-        correo: correo, // This could be null
+    dispatch({
+      type: 'SET_PLAYER_DATA',
+      payload: {
         jugadores: activePlayers,
-      };
+        cantidadJugadores: cantidadJugadores,
+        cantidadImpostores: impostorCount,
+      },
+    });
 
-      try {
-        const response = await api.post('/partidas', gamePayload);//axios.post('/api/partidas', gamePayload);
+    const gamePayload = {
+      modo,
+      nombreColeccion,
+      codigoColeccion,
+      tipoColeccion,
+      cantidadJugadores,
+      cantidadImpostores: impostorCount,
+      correo,
+      jugadores: activePlayers,
+    };
 
-        if (response.status === 200) {
-          // Extract players with roles and words from the API response
-          const playersWithRolesAndWords = response.data.data;
-
-          // Map to Player interface, adding id and initial states
-          const formattedPlayers: Player[] = playersWithRolesAndWords.map((p: { jugador: string; rol: 'CIVIL' | 'IMPOSTOR'; palabra: string; }) => ({
-            id: p.jugador, // Using jugador as the unique ID
-            name: p.jugador,
-            role: p.rol,
-            word: p.palabra,
-            isReady: false,
-            isEliminated: false,
-          }));
-
-          // Dispatch action to update the global state with the formatted players
-          dispatch({ type: 'SET_PLAYERS', payload: formattedPlayers });
-
-          // Dispatch the full game result (including the data property with players)
-          dispatch({ type: 'SET_GAME_RESULT', payload: response.data });
-          
-          navigate('/lobby');
-        } else {
-          setError(`Error creating game: ${response.statusText}`);
-        }
-      } catch (err) {
-        console.error('Error creating game:', err);
-        setError('Failed to create game. Please try again.');
+    try {
+      const response = await api.post('/partidas', gamePayload);
+      if (response.status === 200) {
+        const playersWithRolesAndWords = response.data.data;
+        const formattedPlayers: Player[] = playersWithRolesAndWords.map((p: { jugador: string; rol: 'CIVIL' | 'IMPOSTOR'; palabra: string; }) => ({
+          id: p.jugador,
+          name: p.jugador,
+          role: p.rol,
+          word: p.palabra,
+          isReady: false,
+          isEliminated: false,
+        }));
+        dispatch({ type: 'SET_PLAYERS', payload: formattedPlayers });
+        dispatch({ type: 'SET_GAME_RESULT', payload: response.data });
+        navigate('/lobby');
+      } else {
+        setError(`Error creating game: ${response.statusText}`);
       }
+    } catch (err) {
+      console.error('Error creating game:', err);
+      setError('Failed to create game. Please try again.');
     }
   };
 
   const handleGoBack = () => {
-    navigate('/setup/collection'); // Go back to the collection selection
+    navigate('/setup/collection');
   };
 
   return (
-    <div className="relative min-h-screen bg-black text-white flex flex-col items-center">      
-      {/* Back Button */}
+    <div className="relative min-h-screen bg-black text-white flex flex-col items-center">
       <button
         onClick={handleGoBack}
         className="absolute top-8 left-8 z-20 text-[#22c55e] hover:text-emerald-300 transition-colors"
         aria-label="Go back"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className="w-8 h-8"
-        >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8">
           <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
         </svg>
       </button>
 
-      {/* Content wrapper with padding for scroll spacing */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-md pt-24 pb-20 px-4">
         <h1 className="text-6xl font-extrabold mb-4 text-white text-center drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">CREATE YOUR GAME</h1>
         <h2 className="font-bold text-gray-400 mb-8 text-center">Ingresar la lista de jugadores</h2>
 
-        {error && (
-          <p className="text-red-500 text-lg mb-4">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-lg mb-4">{error}</p>}
 
-        {/* Player Name Inputs */}
         <div className="w-full bg-black/50 rounded-lg p-4 mb-6 border border-[#22c55e] shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-          <h3 className="text-xl font-semibold text-white mb-4">Players:</h3>
+          <h3 className="text-xl font-semibold text-white mb-4">Players: {activePlayersCount}</h3>
           {playerNames.map((name, index) => (
             <div key={index} className="flex items-center space-x-2 mb-3">
               <input
@@ -193,46 +190,45 @@ const PlayerSetup: React.FC = () => {
           </button>
         </div>
 
-        {/* Impostor Selector */}
         <div className="w-full bg-black/50 rounded-lg p-4 mb-8 border border-[#22c55e] shadow-[0_0_20px_rgba(34,197,94,0.4)]">
           <h3 className="text-xl font-semibold text-white mb-4">Number of Impostors:</h3>
           <div className="flex items-center justify-center space-x-4 mb-4">
             <button
-              onClick={() => handleImpostorChange(impostors - 1)}
-              className="p-3 rounded-full bg-black/50 text-[#22c55e] border border-[#22c55e] hover:bg-[#22c55e]/20 focus:outline-none focus:ring-2 focus:ring-[#22c55e]"
+              onClick={decrementImpostors}
+              disabled={impostorCount <= minImpostors || activePlayersCount < 3}
+              className="p-3 rounded-full bg-black/50 text-[#22c55e] border border-[#22c55e] hover:bg-[#22c55e]/20 focus:outline-none focus:ring-2 focus:ring-[#22c55e] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 12H6" />
               </svg>
             </button>
-            <span className="text-4xl font-bold text-[#22c55e]">{impostors}</span>
+            <span className="text-4xl font-bold text-[#22c55e]">{impostorCount}</span>
             <button
-              onClick={() => handleImpostorChange(impostors + 1)}
-              className="p-3 rounded-full bg-black/50 text-[#22c55e] border border-[#22c55e] hover:bg-[#22c55e]/20 focus:outline-none focus:ring-2 focus:ring-[#22c55e]"
+              onClick={incrementImpostors}
+              disabled={impostorCount >= maxImpostors || activePlayersCount < 3}
+              className="p-3 rounded-full bg-black/50 text-[#22c55e] border border-[#22c55e] hover:bg-[#22c55e]/20 focus:outline-none focus:ring-2 focus:ring-[#22c55e] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </button>
           </div>
-          {/* Info Card */}
           <div className="bg-black/50 border border-[#22c55e] rounded-md p-3 text-[#22c55e] flex items-center space-x-2 shadow-[0_0_10px_rgba(34,197,94,0.2)]">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#22c55e]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p className="text-sm">Para un juego balanceado, el número de impostores debe ser menor que la cantidad total de jugadores.</p>
+            <p className="text-sm">Max impostors: {maxImpostors}. Min impostors: {minImpostors}. Players: {activePlayersCount}</p>
           </div>
         </div>
 
-        {/* Create Game Button */}
         <Button
           onClick={handleCreateGame}
-          disabled={!validateGameSetup()}
+          disabled={!isGameSetupValid()}
           className={cn(
             'bg-transparent text-[#22c55e] border-2 border-[#22c55e] font-bold rounded-full text-lg px-8 py-4 flex items-center gap-2',
             'shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_rgba(34,197,94,0.8)] hover:text-white transition-all',
             'max-w-xs',
-            !validateGameSetup() && 'opacity-50 cursor-not-allowed hover:shadow-none active:scale-100'
+            !isGameSetupValid() && 'opacity-50 cursor-not-allowed hover:shadow-none active:scale-100'
           )}
         >
           CREATE GAME
