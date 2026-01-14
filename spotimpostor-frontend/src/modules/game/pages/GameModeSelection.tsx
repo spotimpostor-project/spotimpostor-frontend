@@ -54,7 +54,9 @@ const GameModeSelection: React.FC = () => {
 
   const handleContinue = () => {
     if (selectedMode) {
+      console.log('Selected Mode:', selectedMode);
       dispatch({ type: 'SET_MODE', payload: selectedMode.modo }); // Dispatch SET_MODE
+      dispatch({ type: 'SET_SELECTED_MODE', payload: selectedMode });
       navigate('/setup/collection'); // Navigate to collection selection
     }
   };

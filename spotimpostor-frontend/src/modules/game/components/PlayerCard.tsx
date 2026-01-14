@@ -13,9 +13,10 @@ function cn(...inputs: ClassValue[]) {
 interface PlayerCardProps {
   player: LobbyPlayer;
   onReady: (playerId: string) => void;
+  isBlindMode?: boolean;
 }
 
-const PlayerCard: React.FC<PlayerCardProps> = ({ player, onReady }) => {
+const PlayerCard: React.FC<PlayerCardProps> = ({ player, onReady, isBlindMode = false }) => {
   const [showRole, setShowRole] = useState(false);
 
   const handleViewRole = () => {
@@ -55,10 +56,14 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player, onReady }) => {
 
       {showRole && !player.isReady && (
         <div className="mt-4 pt-4 border-t border-[#22c55e]/20 bg-black">
-          <p className="text-base text-gray-400 font-body">TU ROL:</p>
-          <p className="text-4xl font-extrabold text-[#22c55e] uppercase tracking-widest mt-1">
-            {player.rol || 'No asignado'}
-          </p>
+          {!isBlindMode && (
+            <>
+              <p className="text-base text-gray-400 font-body">TU ROL:</p>
+              <p className="text-4xl font-extrabold text-[#22c55e] uppercase tracking-widest mt-1">
+                {player.rol || 'No asignado'}
+              </p>
+            </>
+          )}
           <p className="text-base text-gray-400 font-body mt-4">TU PALABRA:</p>
           <p className="text-3xl font-extrabold text-[#22c55e] uppercase tracking-widest mt-1">
             {player.palabra || 'No asignada'}
