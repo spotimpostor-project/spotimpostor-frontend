@@ -27,7 +27,7 @@ const PlayerSetup: React.FC = () => {
   const [impostorCount, setImpostorCount] = useState<number>(state.cantidadImpostores || 1);
   const [error, setError] = useState<string | null>(null);
 
-  const { modo, nombreColeccion, tipoColeccion, codigoColeccion, correo } = state;
+  const { modo, nombreColeccion, tipoColeccion, codigoColeccion } = state;
 
   const activePlayersCount = playerNames.filter(name => name.trim() !== '').length;
   const minImpostors = 1;
@@ -109,7 +109,6 @@ const PlayerSetup: React.FC = () => {
       tipoColeccion,
       cantidadJugadores,
       cantidadImpostores: impostorCount,
-      correo,
       jugadores: activePlayers,
     };
 

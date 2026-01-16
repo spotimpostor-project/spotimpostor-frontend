@@ -11,13 +11,15 @@ export const initialGameState: GameState = {
   impostorCount: 0,
   currentPhase: 'SETUP_MODE',
   loading: false,
+  isAuthenticated: false,
+  authToken: null,
+  userName: null,
   modo: '',
   nombreColeccion: '',
   tipoColeccion: 'GENERAL',
   codigoColeccion: null,
   cantidadJugadores: 0,
   cantidadImpostores: 0,
-  correo: null,
   jugadores: [],
   gameResult: null,
   gameTime: 0,
@@ -25,6 +27,8 @@ export const initialGameState: GameState = {
 
 // Define action types
 export type GameAction =
+  | { type: 'LOGIN_SUCCESS'; payload: { token: string; userName: string } }
+  | { type: 'LOGOUT' }
   | { type: 'SET_SELECTED_MODE'; payload: GameMode | null }
   | { type: 'SET_GAME_MODES'; payload: GameMode[] }
   | { type: 'SET_SELECTED_COLLECTION'; payload: Collection | null }
@@ -45,6 +49,17 @@ export type GameAction =
 // Reducer function to manage state changes
 export const gameReducer = (state: GameState, action: GameAction): GameState => {
   switch (action.type) {
+    case 'LOGIN_SUCCESS':
+      return {
+        ...state,
+        isAuthenticated: true,
+        authToken: action.payload.token,
+        userName: action.payload.userName,
+      };
+    case 'LOGOUT':
+      return {
+        ...initialGameState,
+      };
     case 'SET_SELECTED_MODE':
       return { ...state, selectedMode: action.payload };
     case 'SET_GAME_MODES':

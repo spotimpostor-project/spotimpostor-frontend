@@ -15,13 +15,13 @@ function cn(...inputs: ClassValue[]) {
 const Lobby: React.FC = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useGame();
-  // gameResult.data is the source of truth for roles/words.
-  // state.players is the source of truth for isReady status.
-  const { players, gameResult } = state;
+  const { players, gameResult, selectedMode } = state;
 
   const handleReady = useCallback((playerId: string) => {
     dispatch({ type: 'UPDATE_PLAYER_READY_STATUS', payload: { playerId, isReady: true } });
   }, [dispatch]);
+
+  const isBlindMode = useMemo(() => selectedMode?.modo === 'A CIEGAS', [selectedMode]);
 
   // We need to combine the data from two sources to get the complete player state.
   const lobbyPlayers = useMemo((): LobbyPlayer[] => {
@@ -68,6 +68,7 @@ const Lobby: React.FC = () => {
               key={player.id}
               player={player}
               onReady={handleReady}
+              isBlindMode={isBlindMode}
             />
           ))}
         </div>

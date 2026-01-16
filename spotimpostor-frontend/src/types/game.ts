@@ -30,6 +30,9 @@ export interface GameMode {
     impostorCount: number;
     currentPhase: GamePhase;
     loading: boolean;
+    isAuthenticated: boolean;
+    authToken: string | null;
+    userName: string | null;
     // New fields for game creation
     modo: string;
     nombreColeccion: string;
@@ -37,7 +40,6 @@ export interface GameMode {
     codigoColeccion: string | null;
     cantidadJugadores: number;
     cantidadImpostores: number;
-    correo: string | null;
     jugadores: string[];
     gameResult: GameResult | null; // Store the backend response here
     gameTime: number;
