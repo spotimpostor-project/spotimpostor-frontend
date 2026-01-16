@@ -31,7 +31,7 @@ const GameModeSelection: React.FC = () => {
   useEffect(() => {
     const fetchGameModes = async () => {
       try {
-        const response = await api.get<ApiResponse>('/modos_partida');//axios.get<ApiResponse>('/api/modos_partida');
+        const response = await api.get<ApiResponse>('/modos-partida');//axios.get<ApiResponse>('/api/modos_partida');
         setGameModes(response.data.data);
       } catch (err) {
         console.error('Error fetching game modes:', err);

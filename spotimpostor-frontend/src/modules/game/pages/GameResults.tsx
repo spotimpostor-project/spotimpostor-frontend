@@ -41,7 +41,16 @@ const GameResults: React.FC = () => {
   };
 
   const handleBackToHome = () => {
+    // Reset game-specific state
     dispatch({ type: 'LEAVE_GAME', payload: undefined });
+
+    // Immediately restore the login session from localStorage before navigating
+    const token = localStorage.getItem('token_spot');
+    const userName = localStorage.getItem('user_name');
+    if (token && userName) {
+      dispatch({ type: 'LOGIN_SUCCESS', payload: { token, userName } });
+    }
+
     navigate('/');
   };
 
