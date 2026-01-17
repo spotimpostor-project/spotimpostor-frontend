@@ -10,6 +10,7 @@ import Lobby from './modules/game/pages/Lobby';
 import GameSession from './modules/game/pages/GameSession';
 import GameResults from './modules/game/pages/GameResults';
 import MyCollectionsPage from './modules/collection/pages/MyCollectionsPage'; // Import the new page
+import EditCollectionPage from './modules/collection/pages/EditCollectionPage';
 import { useGame } from './store';
 import MainLayout from './router/MainLayout'; // Import the new layout
 
@@ -57,6 +58,7 @@ function AppContent() {
           <Route element={<MainLayout isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/my-collections" element={<MyCollectionsPage />} />
+            <Route path="/my-collections/edit/:codigo" element={<EditCollectionPage />} />
             {/* Future routes that need the header can be added here, e.g., /settings */}
           </Route>
         </Routes>

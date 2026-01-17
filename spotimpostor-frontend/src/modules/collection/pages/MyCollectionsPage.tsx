@@ -20,7 +20,7 @@ const FolderIcon = ({ className }: { className?: string }) => (
 interface Collection {
   codigo: string;
   nombre: string;
-  visibilidad: 'PUBLICO' | 'PRIVADA' | 'COMPARTIDA';
+  visibilidad: 'PUBLICA' | 'PRIVADA' | 'COMPARTIDA';
 }
 
 const MyCollectionsPage = () => {
@@ -52,7 +52,7 @@ const MyCollectionsPage = () => {
   const getVisibilityClass = (visibilidad: Collection['visibilidad']) => {
     const baseClasses = 'uppercase text-xs font-bold px-3 py-1 rounded-full border';
     const colorMap = {
-      PUBLICO: 'bg-green-500/10 text-green-400 border-green-500/30',
+      PUBLICA: 'bg-green-500/10 text-green-400 border-green-500/30',
       PRIVADA: 'bg-red-500/10 text-red-400 border-red-500/30',
       COMPARTIDA: 'bg-orange-500/10 text-orange-400 border-orange-500/30',
     };
@@ -84,7 +84,7 @@ const MyCollectionsPage = () => {
               Crea tu primera colección de palabras para empezar a jugar partidas personalizadas.
             </p>
             <Link
-              to="/collection/create"
+              to="/my-collections/create"
               className="bg-transparent text-[#22c55e] border-2 border-[#22c55e] font-bold rounded-full text-lg px-8 py-4 flex items-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_rgba(34,197,94,0.8)] hover:text-white transition-all"
             >
               <PlusIcon className="w-5 h-5" />
@@ -97,7 +97,7 @@ const MyCollectionsPage = () => {
     return (
         <>
             <Link
-              to="/collection/create"
+              to="/my-collections/create"
               className="bg-transparent text-[#22c55e] border-2 border-[#22c55e] font-bold rounded-full text-lg px-8 py-4 flex items-center gap-2 shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_rgba(34,197,94,0.8)] hover:text-white transition-all mb-12"
             >
               <PlusIcon className="w-5 h-5" />
@@ -119,9 +119,9 @@ const MyCollectionsPage = () => {
                         <p className="font-mono text-sm text-gray-500">#{collection.codigo}</p>
                     </div>
                     <div className="mt-6">
-                        <Link to={`/collection/edit/${collection.codigo}`}>
+                        <Link to={`/my-collections/edit/${collection.codigo}`} state={{ collection }}>
                             <button className="w-full bg-[#22c55e] text-black font-bold py-2 px-4 rounded-lg shadow-[0_0_15px_rgba(34,197,94,0.5)] hover:shadow-[0_0_25px_rgba(34,197,94,0.7)] hover:bg-green-400 transition-all duration-300">
-                                Ver
+                                Editar
                             </button>
                         </Link>
                     </div>
