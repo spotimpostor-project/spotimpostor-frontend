@@ -88,12 +88,12 @@ const GameResults: React.FC = () => {
         </div>
 
         <div className={cn(
-          "p-6 bg-black border rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.4)] mb-8 text-center",
+          "p-6 bg-black border rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.4)] mb-8 text-center mt-10",
           "border-green-500"
         )}>
           <span className="text-xl font-semibold text-gray-400">{isVictory ? "ENCONTRADOS EN" : "SOBREVIVIERON"}</span>
           <span className={cn(
-            "block text-6xl font-mono font-bold tracking-widest mt-2",
+            "block text-6xl font-bold tracking-widest mt-2",
             "text-green-500"
           )}>
             {formatTime(state.gameTime)}

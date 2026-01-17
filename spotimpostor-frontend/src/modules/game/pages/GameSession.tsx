@@ -109,7 +109,7 @@ const GameSession: React.FC = () => {
         <h1 className="text-5xl font-extrabold text-[#22c55e] drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">
           JUEGO INICIADO
         </h1>
-        <p className="text-[#22c55e] text-xl mt-2">
+        <p className="text-[#22c55e] text-xl mt-2 mb-12">
           Encuentra al impostor...
         </p>
       </div>
@@ -142,9 +142,14 @@ const GameSession: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-full flex justify-center mb-4">
-        <div className="text-6xl font-mono font-bold text-[#22c55e] tracking-widest">
-          {formatTime(time)}
+      <div className="w-full flex justify-center mb-4 mt-10">
+        <div className="flex items-center gap-4 rounded-lg border border-green-400/50 px-6 py-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8 text-green-400">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <div className="text-6xl font-bold text-[#22c55e] tracking-widest">
+                {formatTime(time)}
+            </div>
         </div>
       </div>
       
