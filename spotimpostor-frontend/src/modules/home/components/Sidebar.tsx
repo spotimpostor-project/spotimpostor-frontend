@@ -42,9 +42,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     Principal
                 </Link>
                 <Link 
-                  to="/my-collection" 
+                  to="/my-collections" 
                   onClick={onClose} 
-                  className={clsx(baseLinkClasses, { [activeLinkClasses]: pathname === '/my-collection' })}
+                  className={clsx(baseLinkClasses, { [activeLinkClasses]: pathname === '/my-collections' })}
                 >
                     Mi Colección
                 </Link>
