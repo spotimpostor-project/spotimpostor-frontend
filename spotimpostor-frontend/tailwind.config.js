@@ -10,6 +10,7 @@ export default {
         'emerald-green': 'var(--color-emerald-green)',
         'soft-neon-green': 'var(--color-soft-neon-green)',
         'deep-blue': 'var(--color-deep-blue)',
+        'neon-green': '#22c55e',
       },
       fontFamily: {
         primary: ['"Press Start 2P"', 'cursive'],

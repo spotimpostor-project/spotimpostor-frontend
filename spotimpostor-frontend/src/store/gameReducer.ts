@@ -39,7 +39,7 @@ export type GameAction =
   | { type: 'JOIN_GAME'; payload: { gameId: string; players: Player[] } }
   | { type: 'LEAVE_GAME'; payload: undefined }
   | { type: 'SET_MODE'; payload: string }
-  | { type: 'SET_COLLECTION_DATA'; payload: { nombreColeccion: string; tipoColeccion: 'GENERAL' | 'PUBLICA' | 'COMPARTIDA' | 'PRIVADA'; }; }
+  | { type: 'SET_COLLECTION_DATA'; payload: { nombreColeccion: string; tipoColeccion: 'GENERAL' | 'PUBLICA' | 'PRIVADA' | 'COMPARTIDA'; codigoColeccion?: string; }; }
   | { type: 'SET_PLAYER_DATA'; payload: { jugadores: string[]; cantidadJugadores: number; cantidadImpostores: number; }; }
   | { type: 'SET_GAME_RESULT'; payload: GameResult; }
   | { type: 'SET_GAME_ID'; payload: string }
@@ -103,6 +103,7 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         ...state,
         nombreColeccion: action.payload.nombreColeccion,
         tipoColeccion: action.payload.tipoColeccion,
+        codigoColeccion: action.payload.codigoColeccion ?? null,
       };
     case 'SET_PLAYER_DATA':
       return {
