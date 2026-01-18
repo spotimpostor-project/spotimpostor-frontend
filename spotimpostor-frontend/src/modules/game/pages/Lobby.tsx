@@ -15,7 +15,7 @@ function cn(...inputs: ClassValue[]) {
 const Lobby: React.FC = () => {
   const navigate = useNavigate();
   const { state, dispatch } = useGame();
-  const { players, gameResult, selectedMode } = state;
+  const { players, selectedMode } = state;
 
   const handleReady = useCallback((playerId: string) => {
     dispatch({ type: 'UPDATE_PLAYER_READY_STATUS', payload: { playerId, isReady: true } });
@@ -23,29 +23,13 @@ const Lobby: React.FC = () => {
 
   const isBlindMode = useMemo(() => selectedMode?.modo === 'A CIEGAS', [selectedMode]);
 
-  // We need to combine the data from two sources to get the complete player state.
-  const lobbyPlayers = useMemo((): LobbyPlayer[] => {
-    if (!gameResult?.data) {
-      return [];
-    }
-    return gameResult.data.map((gamePlayer: GamePlayerData) => {
-      // Find the player in the 'players' array to get their 'isReady' status
-      const statePlayer = players.find((p: Player) => p.id === gamePlayer.jugador);
-      return {
-        ...gamePlayer, // Contains jugador, rol, palabra
-        id: gamePlayer.jugador, // Ensure there's an id for the key and onReady handler
-        isReady: statePlayer?.isReady || false,
-      };
-    });
-  }, [gameResult, players]);
-
   const readyPlayersCount = useMemo(() => {
-    return lobbyPlayers.filter(p => p.isReady).length;
-  }, [lobbyPlayers]);
+    return players.filter(p => p.isReady).length;
+  }, [players]);
 
   const allPlayersReady = useMemo(() => {
-    return lobbyPlayers.length > 0 && readyPlayersCount === lobbyPlayers.length;
-  }, [lobbyPlayers, readyPlayersCount]);
+    return players.length > 0 && readyPlayersCount === players.length;
+  }, [players, readyPlayersCount]);
 
   const handleStartGame = () => {
     console.log('Starting game...');
@@ -63,10 +47,16 @@ const Lobby: React.FC = () => {
         </div>
 
         <div className="w-full max-w-2xl space-y-4">
-          {lobbyPlayers.map((player) => (
+          {players.map((player) => (
             <PlayerCard
               key={player.id}
-              player={player}
+              player={{
+                id: player.id,
+                jugador: player.name,
+                rol: player.role as 'CIVIL' | 'IMPOSTOR',
+                palabra: player.word as string,
+                isReady: player.isReady,
+              }}
               onReady={handleReady}
               isBlindMode={isBlindMode}
             />
@@ -74,7 +64,7 @@ const Lobby: React.FC = () => {
         </div>
 
         <div className="mt-6 text-xl font-primary text-[#22c55e] drop-shadow-neon">
-          {readyPlayersCount}/{lobbyPlayers.length} Listos
+          {readyPlayersCount}/{players.length} Listos
         </div>
 
         <div className="w-full flex justify-center mt-6">

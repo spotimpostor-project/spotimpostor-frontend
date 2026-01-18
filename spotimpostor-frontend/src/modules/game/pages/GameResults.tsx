@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useRef } from 'react';
 import { useGame } from '../../../store';
 import { useNavigate, useLocation } from 'react-router-dom';
+import api from '../../../configs/api';
 import { GamePlayerData } from '../../../types/game';
 import { Button } from '../../../shared/components/Button';
 import { twMerge } from 'tailwind-merge';
@@ -18,7 +19,46 @@ const GameResults: React.FC = () => {
   const outcome = location.state?.outcome || 'DEFEAT';
   const isVictory = outcome === 'VICTORY';
 
-  const { gameResult } = state;
+  const { gameResult, gameTime, gameId } = state;
+  const effectRan = useRef(false);
+
+  const formatDuration = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600).toString().padStart(2, '0');
+    const minutes = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+    const secs = (seconds % 60).toString().padStart(2, '0');
+    return `${hours}:${minutes}:${secs}`;
+  };
+
+  useEffect(() => {
+    if (effectRan.current === false && gameId && gameTime > 0) {
+      console.log('Resultado de la Partida:', {
+        resultado: outcome,
+        tiempoJugado: gameTime,
+      });
+
+      const esVictoria = outcome === 'VICTORY';
+      const duracion = formatDuration(gameTime);
+
+      const payload = {
+          idPartida: gameId,
+          duracion: duracion,
+          esVictoria: esVictoria
+      };
+
+      const saveResult = async () => {
+          try {
+              await api.patch('/partidas', payload);
+          } catch (error) {
+              console.error("Error saving game result:", error);
+          }
+      };
+
+      saveResult();
+    }
+    return () => {
+      effectRan.current = true;
+    };
+  }, [outcome, gameTime, gameId]);
 
   const impostors = useMemo(() => {
     if (!gameResult?.data) return [];
