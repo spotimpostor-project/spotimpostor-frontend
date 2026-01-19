@@ -104,8 +104,8 @@ const GameModeSelection: React.FC = () => {
               CREATE YOUR GAME
             </h1>
         </div>
-        <h2 className="font-bold text-gray-400 mb-12 text-center">
-          Choose game mode
+        <h2 className="font-bold text-green-400 mb-12 text-center">
+          Escoge el modo de juego
         </h2>
 
         {gameModes && gameModes.length > 0 ? (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 
 interface SidebarProps {
@@ -9,6 +9,26 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string) => {
+    const token = localStorage.getItem('token_spot');
+
+    if (path === '/my-collections') {
+      if (token) {
+        navigate(path);
+      } else {
+        navigate('/', { state: { showLoginAlert: true } });
+      }
+    } else if (path === '/settings') {
+      if (token) {
+        navigate('/', { state: { showComingSoon: true } });
+      } else {
+        navigate('/', { state: { showLoginAlert: true } });
+      }
+    }
+    onClose();
+  };
 
   const baseLinkClasses = 'text-lg hover:text-green-400 transition-colors duration-200 p-2 rounded-md text-center';
   const activeLinkClasses = 'bg-green-900/50 text-green-300 shadow-[0_0_10px_rgba(34,197,94,0.5)]';
@@ -41,20 +61,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 >
                     Principal
                 </Link>
-                <Link 
-                  to="/my-collections" 
-                  onClick={onClose} 
+                <button 
+                  onClick={() => handleNavigation('/my-collections')} 
                   className={clsx(baseLinkClasses, { [activeLinkClasses]: pathname === '/my-collections' })}
                 >
                     Mi Colección
-                </Link>
-                <Link 
-                  to="/settings" 
-                  onClick={onClose} 
+                </button>
+                <button 
+                  onClick={() => handleNavigation('/settings')} 
                   className={clsx(baseLinkClasses, { [activeLinkClasses]: pathname === '/settings' })}
                 >
                     Configuración
-                </Link>
+                </button>
             </nav>
             <div className="mt-auto text-center text-xs text-gray-500">
                 Spot The Impostor

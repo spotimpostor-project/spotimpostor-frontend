@@ -199,7 +199,7 @@ const CollectionSelection: React.FC = () => {
           )}
         </div>
 
-        
+        <div className="text-center mt-4">
           <Button
             onClick={handleContinue}
             disabled={!selectedCollection}
@@ -212,7 +212,7 @@ const CollectionSelection: React.FC = () => {
           >
             CONTINUAR
           </Button>
-        
+        </div>
       </div>
     </div>
   );

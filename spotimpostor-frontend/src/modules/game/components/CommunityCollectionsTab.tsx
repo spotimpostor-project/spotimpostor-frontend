@@ -125,22 +125,24 @@ const CommunityCollectionsTab: React.FC<CommunityCollectionsTabProps> = ({ onSel
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {collections.map((collection) => (
-          <div
-            key={collection.codigo}
-            onClick={() => handleSelectCollection(collection)}
-            className={`bg-gray-900 border-2 rounded-lg p-6 cursor-pointer transition-all duration-300 flex flex-col justify-center items-center text-center
-              ${selectedCollection?.codigo === collection.codigo
-                ? 'border-green-400 shadow-[0_0_15px_rgba(74,222,128,0.8)]' // Efecto glow verde
-                : 'border-gray-700 hover:border-green-500'
-              }`}
-          >
-            <h3 className="text-xl font-bold text-green-400">{collection.nombre}</h3>
-            <p className="text-sm text-gray-300">#{collection.codigo}</p>
-            <p className="text-xs text-gray-500 mt-2">por {collection.autor}</p>
-          </div>
-        ))}
+      <div className="flex justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+          {collections.map((collection) => (
+            <div
+              key={collection.codigo}
+              onClick={() => handleSelectCollection(collection)}
+              className={`bg-gray-900 border-2 rounded-lg p-6 cursor-pointer transition-all duration-300 flex flex-col justify-center items-center text-center w-full max-w-xs min-h-[150px]
+                ${selectedCollection?.codigo === collection.codigo
+                  ? 'border-green-400 shadow-[0_0_15px_rgba(74,222,128,0.8)]' // Efecto glow verde
+                  : 'border-gray-700 hover:border-green-500'
+                }`}
+            >
+              <h3 className="text-xl font-bold text-green-400">{collection.nombre}</h3>
+              <p className="text-sm text-gray-300">#{collection.codigo}</p>
+              <p className="text-xs text-gray-500 mt-2">por {collection.autor}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
