@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import PlayerCard from '../components/PlayerCard';
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
-import { GamePlayerData, Player, LobbyPlayer } from '../../../types/game';
 
 // Utility for combining Tailwind classes
 function cn(...inputs: ClassValue[]) {
