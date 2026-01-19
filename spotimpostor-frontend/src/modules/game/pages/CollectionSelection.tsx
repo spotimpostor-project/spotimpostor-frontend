@@ -5,6 +5,7 @@ import { Button } from '../../../shared/components/Button';
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
 import UserCollectionsTab from '../components/UserCollectionsTab';
+import CommunityCollectionsTab from '../components/CommunityCollectionsTab';
 import { useGame } from '../../../store'; 
 
 function cn(...inputs: ClassValue[]) {
@@ -194,7 +195,7 @@ const CollectionSelection: React.FC = () => {
             <UserCollectionsTab onSelect={handleUserCollectionSelect} selectedCollection={selectedCollection} />
           )}
           {activeTab === 'COMMUNITY' && (
-            <p className="text-xl text-center text-green-400 mt-5">Funcionalidad "Comunidad" próximamente.</p>
+            <CommunityCollectionsTab onSelect={handleUserCollectionSelect} />
           )}
         </div>
 
