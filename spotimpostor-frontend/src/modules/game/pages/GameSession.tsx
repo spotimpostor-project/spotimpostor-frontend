@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Vote, Eye } from 'lucide-react';
 import { useGame } from '../../../store';
+import EliminationPopup from '../components/EliminationPopup';
 import VotingModal from '../components/VotingModal';
 import { Player } from '../../../types/game';
 
@@ -106,7 +107,7 @@ const GameSession: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen bg-black text-white p-8">
       <div className="text-center mt-12">
-        <h1 className="text-5xl font-extrabold text-[#22c55e] drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">
+        <h1 className="text-6xl font-extrabold mb-4 text-white text-center drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">
           JUEGO INICIADO
         </h1>
         <p className="text-[#22c55e] text-xl mt-2 mb-12">
@@ -115,9 +116,7 @@ const GameSession: React.FC = () => {
       </div>
 
       {eliminationMessage && (
-        <div className="absolute top-1/3 z-20 p-6 bg-black border border-[#22c55e] rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.4)]">
-          <p className="text-2xl text-white text-center">{eliminationMessage}</p>
-        </div>
+        <EliminationPopup message={eliminationMessage} />
       )}
 
       <div className="flex flex-col md:flex-row gap-8 w-full max-w-4xl">

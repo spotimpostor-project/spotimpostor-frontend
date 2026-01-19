@@ -158,8 +158,8 @@ const PlayerSetup: React.FC = () => {
       </button>
 
       <div className="relative z-10 flex flex-col items-center w-full max-w-md pt-24 pb-20 px-4">
-        <h1 className="text-6xl font-extrabold mb-4 text-white text-center drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">CREATE YOUR GAME</h1>
-        <h2 className="font-bold text-gray-400 mb-8 text-center">Ingresar la lista de jugadores</h2>
+        <h1 className="text-6xl font-extrabold mb-4 text-white text-center drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">CREA TU PARTIDA</h1>
+        <h2 className="font-bold text-green-400 mb-12 text-center">Ingresar la lista de jugadores</h2>
 
         {error && <p className="text-red-500 text-lg mb-4">{error}</p>}
 

@@ -1,6 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import api from '../../../configs/api';
+import { twMerge } from 'tailwind-merge';
+import { clsx, type ClassValue } from 'clsx';
 
 // Tipos para la estructura de datos de la colección y las props del componente
 interface Collection {
@@ -10,16 +11,27 @@ interface Collection {
   visibilidad: 'PUBLICA' | 'COMPARTIDA';
 }
 
-interface CommunityCollectionsTabProps {
-  onSelect: (collection: { nombreColeccion: string; codigoColeccion: string; tipoColeccion: 'PUBLICA' | 'COMPARTIDA' }) => void;
+interface SelectedCollectionInfo {
+    nombre: string;
+    tipo: 'GENERAL' | 'PUBLICA' | 'PRIVADA' | 'COMPARTIDA';
+    codigo?: string;
 }
 
-const CommunityCollectionsTab: React.FC<CommunityCollectionsTabProps> = ({ onSelect }) => {
+interface CommunityCollectionsTabProps {
+  onSelect: (collection: { nombreColeccion: string; codigoColeccion: string; tipoColeccion: 'PUBLICA' | 'COMPARTIDA' }) => void;
+  selectedCollection: SelectedCollectionInfo | null;
+}
+
+// Utility for combining Tailwind classes
+function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+const CommunityCollectionsTab: React.FC<CommunityCollectionsTabProps> = ({ onSelect, selectedCollection }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState<'Nombre' | 'Código'>('Nombre');
   const [orderType, setOrderType] = useState<'Popular' | 'Reciente'>('Popular');
   const [collections, setCollections] = useState<Collection[]>([]);
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -63,7 +75,6 @@ const CommunityCollectionsTab: React.FC<CommunityCollectionsTabProps> = ({ onSel
   }, [orderType]); // Recarga cuando cambia el tipo de orden
 
   const handleSelectCollection = (collection: Collection) => {
-    setSelectedCollection(collection);
     onSelect({
       nombreColeccion: collection.nombre,
       codigoColeccion: collection.codigo,
@@ -125,24 +136,25 @@ const CommunityCollectionsTab: React.FC<CommunityCollectionsTabProps> = ({ onSel
         </div>
       )}
 
-      <div className="flex justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-          {collections.map((collection) => (
-            <div
-              key={collection.codigo}
-              onClick={() => handleSelectCollection(collection)}
-              className={`bg-gray-900 border-2 rounded-lg p-6 cursor-pointer transition-all duration-300 flex flex-col justify-center items-center text-center w-full max-w-xs min-h-[150px]
-                ${selectedCollection?.codigo === collection.codigo
-                  ? 'border-green-400 shadow-[0_0_15px_rgba(74,222,128,0.8)]' // Efecto glow verde
-                  : 'border-gray-700 hover:border-green-500'
-                }`}
-            >
-              <h3 className="text-xl font-bold text-green-400">{collection.nombre}</h3>
-              <p className="text-sm text-gray-300">#{collection.codigo}</p>
-              <p className="text-xs text-gray-500 mt-2">por {collection.autor}</p>
-            </div>
-          ))}
-        </div>
+      <div className="flex flex-col gap-4">
+        {collections.map((collection) => (
+          <div
+            key={collection.codigo}
+            onClick={() => handleSelectCollection(collection)}
+            className={cn(
+                "w-full rounded-lg p-4 cursor-pointer bg-black/50 text-white text-center transition-all duration-300",
+                "border border-green-400", // Subtle default border
+                "hover:border-green-400", // Hover effect
+                { // Selected state
+                  'border-2 border-green-400 shadow-[0_0_15px_rgba(34,197,94,0.8)]': selectedCollection?.codigo === collection.codigo
+                }
+              )}
+          >
+            <h3 className="text-xl font-bold text-neon-green">{collection.nombre}</h3>
+            <p className="font-mono text-green-400 text-sm tracking-wider">#{collection.codigo}</p>
+            <p className="text-xs text-gray-500 mt-2">por {collection.autor}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

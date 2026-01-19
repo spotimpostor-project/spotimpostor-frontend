@@ -40,9 +40,10 @@ const Lobby: React.FC = () => {
     <div className="bg-black text-white">
       <div className="relative z-10 flex flex-col items-center justify-start min-h-screen overflow-y-auto p-4 pt-24 pb-20 text-white font-body">
         <div className="relative mb-8 text-center">
-          <h1 className="text-6xl font-extrabold text-white drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">
+          <h1 className="text-6xl font-extrabold mb-4 text-white text-center drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">
             WAITING ROOM
           </h1>
+          <h2 className="font-bold text-green-400 mb-12 text-center">Revisa tu palabra y rol asignados</h2>
         </div>
 
         <div className="w-full max-w-2xl space-y-4">
