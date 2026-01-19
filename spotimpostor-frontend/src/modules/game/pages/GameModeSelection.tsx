@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import axios from 'axios';
-import api from '../../../configs/api';
 import { Button } from '../../../shared/components/Button';
 import { twMerge } from 'tailwind-merge';
 import { clsx, type ClassValue } from 'clsx';
 import { useGame } from '../../../store'; // Import useGame
+import { useGameModes } from '../hooks/useGameQueries';
 
 // Utility for combining Tailwind classes - copied from Button.tsx for consistency
 function cn(...inputs: ClassValue[]) {
@@ -14,35 +13,12 @@ function cn(...inputs: ClassValue[]) {
 
 import { GameMode } from '../../../types/game';
 
-interface ApiResponse {
-  message: string;
-  codigo: string;
-  data: GameMode[];
-}
-
 const GameModeSelection: React.FC = () => {
   const navigate = useNavigate();
-  const [gameModes, setGameModes] = useState<GameMode[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data: gameModes, isLoading, error: queryError } = useGameModes();
   const [error, setError] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<GameMode | null>(null);
   const { dispatch } = useGame(); // Use the game context
-
-  useEffect(() => {
-    const fetchGameModes = async () => {
-      try {
-        const response = await api.get<ApiResponse>('/modos-partida');//axios.get<ApiResponse>('/api/modos_partida');
-        setGameModes(response.data.data);
-      } catch (err) {
-        console.error('Error fetching game modes:', err);
-        setError('Failed to load game modes. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGameModes();
-  }, []);
 
   const handleSelectMode = (mode: GameMode) => {
     setSelectedMode(mode.modo === selectedMode?.modo ? null : mode); // Toggle selection
@@ -61,7 +37,7 @@ const GameModeSelection: React.FC = () => {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="relative min-h-screen bg-black text-white flex items-center justify-center">
         <p className="z-10 text-xl text-[#22c55e]">Loading game modes...</p>
@@ -69,10 +45,10 @@ const GameModeSelection: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (queryError || error) {
     return (
       <div className="relative min-h-screen bg-black text-white flex items-center justify-center">
-        <p className="z-10 text-xl text-red-500">{error}</p>
+        <p className="z-10 text-xl text-red-500">{queryError?.message || error}</p>
       </div>
     );
   }
@@ -101,7 +77,7 @@ const GameModeSelection: React.FC = () => {
       <div className="z-10 flex flex-col items-center max-w-4xl w-full">
         <div className="w-full text-center">
             <h1 className="text-6xl font-extrabold mb-4 text-white drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] mt-12">
-              CREATE YOUR GAME
+              CREA TU PARTIDA
             </h1>
         </div>
         <h2 className="font-bold text-green-400 mb-12 text-center">
@@ -110,7 +86,7 @@ const GameModeSelection: React.FC = () => {
 
         {gameModes && gameModes.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mb-10">
-            {gameModes.map((mode) => (
+            {gameModes.map((mode: GameMode) => (
               <div
                 key={mode.modo}
                 className={cn(

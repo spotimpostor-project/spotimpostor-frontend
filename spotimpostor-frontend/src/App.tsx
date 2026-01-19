@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import HomePage from './modules/home/pages/HomePage';
@@ -14,6 +15,14 @@ import EditCollectionPage from './modules/collection/pages/EditCollectionPage';
 import CreateCollectionPage from '@modules/collection/pages/CreateCollectionPage';
 import { useGame } from './store';
 import MainLayout from './router/MainLayout'; // Import the new layout
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function AppContent() {
   const location = useLocation();
@@ -78,8 +87,10 @@ const Placeholder = ({ name }: { name: string }) => (
 
 export default function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <AppContent />
+      </Router>
+    </QueryClientProvider>
   );
 }

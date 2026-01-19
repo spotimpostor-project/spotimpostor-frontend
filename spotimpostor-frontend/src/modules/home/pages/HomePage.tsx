@@ -87,7 +87,7 @@ const HomePage: React.FC = () => {
             SPOT THE IMPOSTER
           </h1>
           <p className="font-bold text-gray-400 mb-12">
-            Crea una partida, invita a tus amigos y que comience el juego.
+            Crea una partida, júntate con tus amigos y que comience el juego.
           </p>
 
           {/* CREATE GAME Button */}
