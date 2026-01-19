@@ -10,10 +10,12 @@ export default {
         'emerald-green': 'var(--color-emerald-green)',
         'soft-neon-green': 'var(--color-soft-neon-green)',
         'deep-blue': 'var(--color-deep-blue)',
+        'neon-green': '#22c55e',
       },
       fontFamily: {
         primary: ['"Press Start 2P"', 'cursive'],
         body: ['"Roboto Mono"', 'monospace'],
+        sans: ['"Chakra Petch"', 'sans-serif'],
       },
       boxShadow: {
         'neon-green': '0 0 5px #39FF14, 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #059669',

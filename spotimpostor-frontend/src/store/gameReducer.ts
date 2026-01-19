@@ -39,9 +39,10 @@ export type GameAction =
   | { type: 'JOIN_GAME'; payload: { gameId: string; players: Player[] } }
   | { type: 'LEAVE_GAME'; payload: undefined }
   | { type: 'SET_MODE'; payload: string }
-  | { type: 'SET_COLLECTION_DATA'; payload: { nombreColeccion: string; tipoColeccion: 'GENERAL' | 'PUBLICA' | 'COMPARTIDA' | 'PRIVADA'; }; }
+  | { type: 'SET_COLLECTION_DATA'; payload: { nombreColeccion: string; tipoColeccion: 'GENERAL' | 'PUBLICA' | 'PRIVADA' | 'COMPARTIDA'; codigoColeccion?: string; }; }
   | { type: 'SET_PLAYER_DATA'; payload: { jugadores: string[]; cantidadJugadores: number; cantidadImpostores: number; }; }
   | { type: 'SET_GAME_RESULT'; payload: GameResult; }
+  | { type: 'SET_GAME_ID'; payload: string }
   | { type: 'SET_GAME_TIME'; payload: number }
   | { type: 'UPDATE_PLAYER_READY_STATUS'; payload: { playerId: string; isReady: boolean } }
   | { type: 'ELIMINATE_PLAYER'; payload: { playerId: string } };
@@ -102,6 +103,7 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
         ...state,
         nombreColeccion: action.payload.nombreColeccion,
         tipoColeccion: action.payload.tipoColeccion,
+        codigoColeccion: action.payload.codigoColeccion ?? null,
       };
     case 'SET_PLAYER_DATA':
       return {
@@ -120,15 +122,20 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
           return resultData ? { ...p, role: resultData.rol, word: resultData.palabra } : p;
         }),
       };
+    case 'SET_GAME_ID':
+      return {
+        ...state,
+        gameId: action.payload,
+      };
     case 'SET_GAME_TIME':
       return { ...state, gameTime: action.payload };
     case 'UPDATE_PLAYER_READY_STATUS':
-      return {
-        ...state,
+    return {
+         ...state,  
         players: state.players.map((p: Player) =>
           p.id === action.payload.playerId ? { ...p, isReady: action.payload.isReady } : p
         ),
-      };
+    };
     case 'ELIMINATE_PLAYER':
         return {
           ...state,
@@ -136,7 +143,7 @@ export const gameReducer = (state: GameState, action: GameAction): GameState => 
             p.id === action.payload.playerId ? { ...p, isEliminated: true } : p
           ),
         };
-    default:
+    default:  
       return state;
-  }
+  } 
 };

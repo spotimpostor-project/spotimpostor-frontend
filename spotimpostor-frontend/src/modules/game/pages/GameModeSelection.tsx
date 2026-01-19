@@ -99,11 +99,13 @@ const GameModeSelection: React.FC = () => {
 
       {/* Content */}
       <div className="z-10 flex flex-col items-center max-w-4xl w-full">
-        <h1 className="text-6xl font-extrabold mb-4 text-white drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]">
-          CREATE YOUR GAME
-        </h1>
-        <h2 className="font-bold text-gray-400 mb-12">
-          Choose game mode
+        <div className="w-full text-center">
+            <h1 className="text-6xl font-extrabold mb-4 text-white drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] mt-12">
+              CREATE YOUR GAME
+            </h1>
+        </div>
+        <h2 className="font-bold text-green-400 mb-12 text-center">
+          Escoge el modo de juego
         </h2>
 
         {gameModes && gameModes.length > 0 ? (

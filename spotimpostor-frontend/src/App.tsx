@@ -9,6 +9,9 @@ import PlayerSetup from './modules/game/pages/PlayerSetup';
 import Lobby from './modules/game/pages/Lobby';
 import GameSession from './modules/game/pages/GameSession';
 import GameResults from './modules/game/pages/GameResults';
+import MyCollectionsPage from './modules/collection/pages/MyCollectionsPage'; // Import the new page
+import EditCollectionPage from './modules/collection/pages/EditCollectionPage';
+import CreateCollectionPage from '@modules/collection/pages/CreateCollectionPage';
 import { useGame } from './store';
 import MainLayout from './router/MainLayout'; // Import the new layout
 
@@ -55,7 +58,10 @@ function AppContent() {
           {/* Routes WITH MainLayout (and header) */}
           <Route element={<MainLayout isSidebarOpen={isSidebarOpen} setSidebarOpen={setSidebarOpen} />}>
             <Route path="/" element={<HomePage />} />
-            {/* Future routes that need the header can be added here, e.g., /my-collection, /settings */}
+            <Route path="/my-collections" element={<MyCollectionsPage />} />
+            <Route path="/edit-collection/:codigo" element={<EditCollectionPage />} />
+            <Route path="/create-collection" element={<CreateCollectionPage />} />
+            {/* Future routes that need the header can be added here, e.g., /settings */}
           </Route>
         </Routes>
       </div>

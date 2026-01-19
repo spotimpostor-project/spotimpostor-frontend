@@ -115,8 +115,12 @@ const PlayerSetup: React.FC = () => {
     try {
       const response = await api.post('/partidas', gamePayload);
       if (response.status === 200) {
-        const playersWithRolesAndWords = response.data.data;
-        const formattedPlayers: Player[] = playersWithRolesAndWords.map((p: { jugador: string; rol: 'CIVIL' | 'IMPOSTOR'; palabra: string; }) => ({
+        const { idPartida, rolesJugadores } = response.data.data;
+        
+        console.log('Datos de Partida Cargados:', { idPartida, jugadores: rolesJugadores });
+        localStorage.setItem('current_game_id', idPartida);
+
+        const formattedPlayers: Player[] = rolesJugadores.map((p: { jugador: string; rol: 'CIVIL' | 'IMPOSTOR'; palabra: string; }) => ({
           id: p.jugador,
           name: p.jugador,
           role: p.rol,
@@ -125,7 +129,8 @@ const PlayerSetup: React.FC = () => {
           isEliminated: false,
         }));
         dispatch({ type: 'SET_PLAYERS', payload: formattedPlayers });
-        dispatch({ type: 'SET_GAME_RESULT', payload: response.data });
+        dispatch({ type: 'SET_GAME_ID', payload: idPartida });
+        dispatch({ type: 'SET_GAME_RESULT', payload: { data: rolesJugadores } });
         navigate('/lobby');
       } else {
         setError(`Error creating game: ${response.statusText}`);
