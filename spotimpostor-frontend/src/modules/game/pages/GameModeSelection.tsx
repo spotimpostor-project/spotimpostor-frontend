@@ -16,7 +16,7 @@ import { GameMode } from '../../../types/game';
 const GameModeSelection: React.FC = () => {
   const navigate = useNavigate();
   const { data: gameModes, isLoading, error: queryError } = useGameModes();
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<GameMode | null>(null);
   const { dispatch } = useGame(); // Use the game context
 
